@@ -1,0 +1,7 @@
+{
+    "extends": [
+        "@nodescript/eslint-config"
+    ],
+    "rules": {
+    }
+}
