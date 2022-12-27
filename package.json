@@ -28,7 +28,7 @@
     ],
     "dependencies": {
         "@nodescript/adapter-mongodb-protocol": "^1.3.0",
-        "@nodescript/core": "^3.8.0"
+        "@nodescript/core": "^4.0.0"
     },
     "devDependencies": {
         "@nodescript/cli": "^0.5.1",
