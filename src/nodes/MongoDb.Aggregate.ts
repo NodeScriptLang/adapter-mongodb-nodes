@@ -11,8 +11,8 @@ type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
     moduleId: '@contrib/MongoDb.Aggregate',
-    version: '1.0.0',
-    label: 'MongoDB Aggregate',
+    version: '1.1.0',
+    label: 'MongoDB.Aggregate',
     description: 'Runs an aggregation pipeline in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'aggregate'],
     params: {

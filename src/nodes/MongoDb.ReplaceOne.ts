@@ -14,8 +14,8 @@ type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
     moduleId: '@contrib/MongoDb.ReplaceOne',
-    version: '1.0.0',
-    label: 'MongoDB Replace One',
+    version: '1.1.0',
+    label: 'MongoDB.ReplaceOne',
     description: 'Replaces a single document matching criteria in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'replace', 'save'],
     params: {

@@ -8,8 +8,8 @@ type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
     moduleId: '@contrib/MongoDb.Connect',
-    version: '1.0.0',
-    label: 'MongoDB Connect',
+    version: '1.1.0',
+    label: 'MongoDB.Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
     params: {
