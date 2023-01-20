@@ -26,9 +26,11 @@ jobs:
         NODESCRIPT_API_URL: https://hub.staging.nodescript.dev
         NODESCRIPT_API_USERNAME: inca
         NODESCRIPT_API_TOKEN: ${{ secrets.NODESCRIPT_API_TOKEN_STAGING }}
+        NODESCRIPT_WORKSPACE_ID: ERED9uHPQ3Fuxz97
     - name: Publish to production
       run: npm run publish:nodes
       env:
         NODESCRIPT_API_URL: https://hub.nodescript.dev
         NODESCRIPT_API_USERNAME: inca
         NODESCRIPT_API_TOKEN: ${{ secrets.NODESCRIPT_API_TOKEN_PRODUCTION }}
+        NODESCRIPT_WORKSPACE_ID: o5TlexFG23iGsQOI

@@ -11,9 +11,8 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    moduleId: '@contrib/MongoDb.InsertMany',
     version: '1.1.0',
-    label: 'MongoDB.InsertMany',
+    moduleName: 'MongoDB.InsertMany',
     description: 'Inserts multiple documents into specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'insert'],
     params: {

@@ -12,9 +12,8 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    moduleId: '@contrib/MongoDb.Delete',
     version: '1.1.0',
-    label: 'MongoDB.Delete',
+    moduleName: 'MongoDB.Delete',
     description: 'Deletes documents matching criteria in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'delete'],
     params: {
