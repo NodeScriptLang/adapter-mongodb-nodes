@@ -8,8 +8,6 @@ type P = {
     collection: string;
     filter: MongoFilter;
     update: MongoUpdate;
-    multiple: boolean;
-    upsert: boolean;
 };
 type R = Promise<unknown>;
 
@@ -40,12 +38,6 @@ export const module: ModuleDefinition<P, R> = {
                 additionalProperties: { type: 'any' },
             },
         },
-        multiple: {
-            schema: { type: 'boolean' },
-        },
-        upsert: {
-            schema: { type: 'boolean' },
-        },
     },
     result: {
         async: true,
@@ -60,18 +52,9 @@ export const compute: ModuleCompute<P, R> = async params => {
     const collection = params.collection;
     const filter = params.filter;
     const update = params.update;
-    const upsert = params.upsert;
-    if (params.multiple) {
-        return await connection.Mongo.updateMany({
-            collection,
-            filter,
-            update,
-        });
-    }
-    return await connection.Mongo.updateOne({
+    return await connection.Mongo.updateMany({
         collection,
         filter,
         update,
-        upsert,
     });
 };

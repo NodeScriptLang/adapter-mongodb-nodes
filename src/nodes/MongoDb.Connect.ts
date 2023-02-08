@@ -1,19 +1,29 @@
-import { GraphEvalContext, ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
+import { ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
 
 import { MongoDbConnectionError } from '../lib/errors.js';
 import { MongoDbConnection } from '../lib/MongoDbConnection.js';
 
-type P = { url: string };
+type P = {
+    url: string;
+    adapterUrl: string;
+};
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.2.0',
+    version: '1.3.0',
     moduleName: 'MongoDB.Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
     params: {
         url: {
             schema: { type: 'string' },
+        },
+        adapterUrl: {
+            schema: {
+                type: 'string',
+                default: 'wss://mongodb.adapters.nodescript.dev/ws'
+            },
+            advanced: true,
         }
     },
     result: {
@@ -25,9 +35,8 @@ export const module: ModuleDefinition<P, R> = {
 };
 
 export const compute: ModuleCompute<P, R> = async (params, ctx) => {
-    const wsUrl = getAdapterWsUrl(ctx);
     const ws = await new Promise<WebSocket>((resolve, reject) => {
-        const ws = new WebSocket(wsUrl);
+        const ws = new WebSocket(params.adapterUrl);
         ws.addEventListener('open', () => {
             resolve(ws);
         });
@@ -43,16 +52,3 @@ export const compute: ModuleCompute<P, R> = async (params, ctx) => {
     await connection.Mongo.connect({ url });
     return connection;
 };
-
-function getAdapterWsUrl(ctx: GraphEvalContext) {
-    const env = ctx.getLocal<string>('NS_ENV', 'production');
-    switch (env) {
-        case 'development':
-            return 'ws://localhost:8183/ws';
-        case 'staging':
-            return 'wss://mongodb.adapters.staging.nodescript.dev/ws';
-        case 'production':
-        default:
-            return 'wss://mongodb.adapters.nodescript.dev/ws';
-    }
-}
