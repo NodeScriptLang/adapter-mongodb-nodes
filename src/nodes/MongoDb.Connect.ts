@@ -11,7 +11,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.3.0',
+    version: '1.4.0',
     moduleName: 'MongoDB.Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
@@ -52,11 +52,11 @@ export const compute: ModuleCompute<P, R> = async (params, ctx) => {
             reject(new MongoDbConnectionError('Could not connect to MongoDB adapter'));
         });
     });
-    const { url } = params;
+    const { url, secret } = params;
     const connection = new MongoDbConnection(ws);
     const disposableId = 'MongoDB.Connect:' + url;
     await ctx.dispose(disposableId);
     ctx.trackDisposable(disposableId, connection);
-    await connection.Mongo.connect({ url });
+    await connection.Mongo.connect({ url, secret });
     return connection;
 };
