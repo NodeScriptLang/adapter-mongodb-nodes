@@ -6,6 +6,7 @@ import { MongoDbConnection } from '../lib/MongoDbConnection.js';
 type P = {
     url: string;
     adapterUrl: string;
+    secret: string;
 };
 type R = Promise<unknown>;
 
@@ -24,7 +25,14 @@ export const module: ModuleDefinition<P, R> = {
                 default: 'wss://mongodb.adapters.nodescript.dev/ws'
             },
             advanced: true,
-        }
+        },
+        secret: {
+            schema: {
+                type: 'string',
+                default: ''
+            },
+            advanced: true,
+        },
     },
     result: {
         async: true,
