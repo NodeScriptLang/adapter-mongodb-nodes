@@ -11,7 +11,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.4.0',
+    version: '1.4.1',
     moduleName: 'MongoDB.Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
@@ -43,8 +43,9 @@ export const module: ModuleDefinition<P, R> = {
 };
 
 export const compute: ModuleCompute<P, R> = async (params, ctx) => {
+    const adapterUrl = params.adapterUrl ?? 'wss://mongodb.adapters.nodescript.dev/ws';
     const ws = await new Promise<WebSocket>((resolve, reject) => {
-        const ws = new WebSocket(params.adapterUrl);
+        const ws = new WebSocket(adapterUrl);
         ws.addEventListener('open', () => {
             resolve(ws);
         });
