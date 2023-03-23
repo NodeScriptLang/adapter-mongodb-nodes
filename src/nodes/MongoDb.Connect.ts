@@ -1,4 +1,4 @@
-import { ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
+import { GraphEvalContext, ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
 
 import { MongoDbConnectionError } from '../lib/errors.js';
 import { MongoDbConnection } from '../lib/MongoDbConnection.js';
@@ -11,7 +11,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.4.1',
+    version: '1.5.0',
     moduleName: 'MongoDB.Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
@@ -22,7 +22,7 @@ export const module: ModuleDefinition<P, R> = {
         adapterUrl: {
             schema: {
                 type: 'string',
-                default: 'wss://mongodb.adapters.nodescript.dev/ws'
+                default: ''
             },
             advanced: true,
         },
@@ -43,7 +43,7 @@ export const module: ModuleDefinition<P, R> = {
 };
 
 export const compute: ModuleCompute<P, R> = async (params, ctx) => {
-    const adapterUrl = params.adapterUrl ?? 'wss://mongodb.adapters.nodescript.dev/ws';
+    const adapterUrl = getAdapterUrl(params, ctx);
     const ws = await new Promise<WebSocket>((resolve, reject) => {
         const ws = new WebSocket(adapterUrl);
         ws.addEventListener('open', () => {
@@ -61,3 +61,10 @@ export const compute: ModuleCompute<P, R> = async (params, ctx) => {
     await connection.Mongo.connect({ url, secret });
     return connection;
 };
+
+function getAdapterUrl(params: P, ctx: GraphEvalContext) {
+    if (params.adapterUrl) {
+        return params.adapterUrl;
+    }
+    return ctx.getLocal<string>('ADAPTER_MONGODB_URL') ?? 'wss://mongodb.adapters.nodescript.dev/ws';
+}
