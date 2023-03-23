@@ -13,7 +13,7 @@ type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
     version: '1.1.0',
-    moduleName: 'MongoDB.UpdateOne',
+    moduleName: 'Mongo DB / Update One',
     description: 'Updates documents matching criteria in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'update'],
     params: {

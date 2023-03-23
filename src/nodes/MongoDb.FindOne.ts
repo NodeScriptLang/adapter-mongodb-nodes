@@ -13,7 +13,7 @@ type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
     version: '1.1.0',
-    moduleName: 'MongoDB.FindOne',
+    moduleName: 'Mongo DB / Find One',
     description: 'Finds one document in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'find', 'query'],
     params: {
