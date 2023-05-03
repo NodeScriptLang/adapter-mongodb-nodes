@@ -1,7 +1,6 @@
 import { GraphEvalContext, ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
 
-import { MongoDbConnectionError } from '../lib/errors.js';
-import { MongoDbConnectionV1, MongoDbConnectionV2 } from '../lib/MongoDbConnection.js';
+import { MongoDbConnection } from '../lib/MongoDbConnection.js';
 
 type P = {
     url: string;
@@ -11,7 +10,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.0.2',
+    version: '2.1.0',
     moduleName: 'Mongo DB / Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
@@ -44,36 +43,14 @@ export const module: ModuleDefinition<P, R> = {
 
 export const compute: ModuleCompute<P, R> = async (params, ctx) => {
     const adapterUrl = getAdapterUrl(params, ctx);
-    if (/^wss?:\/\//.test(adapterUrl)) {
-        const ws = await new Promise<WebSocket>((resolve, reject) => {
-            const ws = new WebSocket(adapterUrl);
-            ws.addEventListener('open', () => {
-                resolve(ws);
-            });
-            ws.addEventListener('error', () => {
-                reject(new MongoDbConnectionError('Could not connect to MongoDB adapter'));
-            });
-        });
-        const { url, secret } = params;
-        const connection = new MongoDbConnectionV1(ws);
-        const disposableId = 'MongoDB.Connect:' + url;
-        await ctx.dispose(disposableId);
-        ctx.trackDisposable(disposableId, connection);
-        await connection.Mongo.connect({ url, secret });
-        return connection;
-    }
-    if (/^https?:\/\//.test(adapterUrl)) {
-        // http(s):// adapter APIs
-        const connection = new MongoDbConnectionV2(params.url, adapterUrl);
-        // TODO check connection
-        return connection;
-    }
-    throw new MongoDbConnectionError('Invalid adapter URL');
+    const connection = new MongoDbConnection(params.url, adapterUrl, params.secret);
+    // TODO check connection
+    return connection;
 };
 
 function getAdapterUrl(params: P, ctx: GraphEvalContext) {
     if (params.adapterUrl) {
         return params.adapterUrl;
     }
-    return ctx.getLocal<string>('ADAPTER_MONGODB_URL') ?? 'wss://mongodb.adapters.nodescript.dev/ws';
+    return ctx.getLocal<string>('ADAPTER_MONGODB_URL') ?? 'https://mongodb.adapters.nodescript.dev';
 }
