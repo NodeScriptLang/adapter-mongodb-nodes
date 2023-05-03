@@ -10,7 +10,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.1.0',
+    version: '2.0.0',
     moduleName: 'Mongo DB / Aggregate',
     description: 'Runs an aggregation pipeline in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'aggregate'],
@@ -43,6 +43,7 @@ export const compute: ModuleCompute<P, R> = async params => {
     const collection = params.collection;
     const pipeline = params.pipeline;
     const { documents } = await connection.Mongo.aggregate({
+        databaseUrl: connection.databaseUrl,
         collection,
         pipeline,
     });

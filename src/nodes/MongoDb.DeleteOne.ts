@@ -1,4 +1,4 @@
-import { MongoDocument } from '@nodescript/adapter-mongodb-protocol';
+import { MongoFilter } from '@nodescript/adapter-mongodb-protocol';
 import { ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
 
 import { requireConnection } from '../lib/MongoDbConnection.js';
@@ -6,15 +6,15 @@ import { requireConnection } from '../lib/MongoDbConnection.js';
 type P = {
     connection: unknown;
     collection: string;
-    documents: MongoDocument[];
+    filter: MongoFilter;
 };
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
     version: '2.0.0',
-    moduleName: 'Mongo DB / Insert Many',
-    description: 'Inserts multiple documents into specified MongoDB collection.',
-    keywords: ['mongodb', 'database', 'insert'],
+    moduleName: 'Mongo DB / Delete One',
+    description: 'Deletes a single document matching criteria in specified MongoDB collection.',
+    keywords: ['mongodb', 'database', 'delete'],
     params: {
         connection: {
             schema: { type: 'any' },
@@ -23,14 +23,11 @@ export const module: ModuleDefinition<P, R> = {
         collection: {
             schema: { type: 'string' },
         },
-        documents: {
+        filter: {
             schema: {
-                type: 'array',
-                items: {
-                    type: 'object',
-                    properties: {},
-                    additionalProperties: { type: 'any' },
-                },
+                type: 'object',
+                properties: {},
+                additionalProperties: { type: 'any' },
             },
         },
     },
@@ -45,11 +42,10 @@ export const module: ModuleDefinition<P, R> = {
 export const compute: ModuleCompute<P, R> = async params => {
     const connection = requireConnection(params.connection);
     const collection = params.collection;
-    const documents = params.documents;
-    const res = await connection.Mongo.insertMany({
+    const filter = params.filter;
+    return await connection.Mongo.deleteOne({
         databaseUrl: connection.databaseUrl,
         collection,
-        documents,
+        filter,
     });
-    return res;
 };

@@ -13,7 +13,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.1.0',
+    version: '2.0.0',
     moduleName: 'Mongo DB / Replace One',
     description: 'Replaces a single document matching criteria in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'replace', 'save'],
@@ -58,6 +58,7 @@ export const compute: ModuleCompute<P, R> = async params => {
     const replacement = params.replacement;
     const upsert = params.upsert;
     return await connection.Mongo.replaceOne({
+        databaseUrl: connection.databaseUrl,
         collection,
         filter,
         replacement,

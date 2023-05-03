@@ -12,7 +12,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.1.0',
+    version: '2.0.0',
     moduleName: 'Mongo DB / Update One',
     description: 'Updates documents matching criteria in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'update'],
@@ -53,6 +53,7 @@ export const compute: ModuleCompute<P, R> = async params => {
     const filter = params.filter;
     const update = params.update;
     return await connection.Mongo.updateMany({
+        databaseUrl: connection.databaseUrl,
         collection,
         filter,
         update,

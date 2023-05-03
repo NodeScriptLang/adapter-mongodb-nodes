@@ -12,7 +12,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.1.0',
+    version: '2.0.0',
     moduleName: 'Mongo DB / Find One',
     description: 'Finds one document in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'find', 'query'],
@@ -53,6 +53,7 @@ export const compute: ModuleCompute<P, R> = async params => {
     const filter = params.filter;
     const projection = Object.keys(params.projection).length > 0 ? params.projection : undefined;
     const { document } = await connection.Mongo.findOne({
+        databaseUrl: connection.databaseUrl,
         collection,
         filter,
         projection,

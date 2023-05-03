@@ -1,7 +1,7 @@
 import { GraphEvalContext, ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
 
 import { MongoDbConnectionError } from '../lib/errors.js';
-import { MongoDbConnection } from '../lib/MongoDbConnection.js';
+import { MongoDbConnectionV1, MongoDbConnectionV2 } from '../lib/MongoDbConnection.js';
 
 type P = {
     url: string;
@@ -11,7 +11,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.5.0',
+    version: '2.0.2',
     moduleName: 'Mongo DB / Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
@@ -44,22 +44,31 @@ export const module: ModuleDefinition<P, R> = {
 
 export const compute: ModuleCompute<P, R> = async (params, ctx) => {
     const adapterUrl = getAdapterUrl(params, ctx);
-    const ws = await new Promise<WebSocket>((resolve, reject) => {
-        const ws = new WebSocket(adapterUrl);
-        ws.addEventListener('open', () => {
-            resolve(ws);
+    if (/^wss?:\/\//.test(adapterUrl)) {
+        const ws = await new Promise<WebSocket>((resolve, reject) => {
+            const ws = new WebSocket(adapterUrl);
+            ws.addEventListener('open', () => {
+                resolve(ws);
+            });
+            ws.addEventListener('error', () => {
+                reject(new MongoDbConnectionError('Could not connect to MongoDB adapter'));
+            });
         });
-        ws.addEventListener('error', () => {
-            reject(new MongoDbConnectionError('Could not connect to MongoDB adapter'));
-        });
-    });
-    const { url, secret } = params;
-    const connection = new MongoDbConnection(ws);
-    const disposableId = 'MongoDB.Connect:' + url;
-    await ctx.dispose(disposableId);
-    ctx.trackDisposable(disposableId, connection);
-    await connection.Mongo.connect({ url, secret });
-    return connection;
+        const { url, secret } = params;
+        const connection = new MongoDbConnectionV1(ws);
+        const disposableId = 'MongoDB.Connect:' + url;
+        await ctx.dispose(disposableId);
+        ctx.trackDisposable(disposableId, connection);
+        await connection.Mongo.connect({ url, secret });
+        return connection;
+    }
+    if (/^https?:\/\//.test(adapterUrl)) {
+        // http(s):// adapter APIs
+        const connection = new MongoDbConnectionV2(params.url, adapterUrl);
+        // TODO check connection
+        return connection;
+    }
+    throw new MongoDbConnectionError('Invalid adapter URL');
 };
 
 function getAdapterUrl(params: P, ctx: GraphEvalContext) {

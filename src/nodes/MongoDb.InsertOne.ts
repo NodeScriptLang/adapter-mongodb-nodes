@@ -11,7 +11,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.1.0',
+    version: '2.0.0',
     moduleName: 'Mongo DB / Insert One',
     description: 'Inserts a single document into specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'insert'],
@@ -44,6 +44,7 @@ export const compute: ModuleCompute<P, R> = async params => {
     const collection = params.collection;
     const document = params.document;
     const res = await connection.Mongo.insertOne({
+        databaseUrl: connection.databaseUrl,
         collection,
         document,
     });

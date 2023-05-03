@@ -7,14 +7,13 @@ type P = {
     connection: unknown;
     collection: string;
     filter: MongoFilter;
-    multiple: boolean;
 };
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '1.1.0',
-    moduleName: 'Mongo DB / Delete',
-    description: 'Deletes documents matching criteria in specified MongoDB collection.',
+    version: '2.0.0',
+    moduleName: 'Mongo DB / Delete Many',
+    description: 'Deletes multiple documents matching criteria in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'delete'],
     params: {
         connection: {
@@ -31,9 +30,6 @@ export const module: ModuleDefinition<P, R> = {
                 additionalProperties: { type: 'any' },
             },
         },
-        multiple: {
-            schema: { type: 'boolean' },
-        }
     },
     result: {
         async: true,
@@ -47,13 +43,8 @@ export const compute: ModuleCompute<P, R> = async params => {
     const connection = requireConnection(params.connection);
     const collection = params.collection;
     const filter = params.filter;
-    if (params.multiple) {
-        return await connection.Mongo.deleteMany({
-            collection,
-            filter,
-        });
-    }
-    return await connection.Mongo.deleteOne({
+    return await connection.Mongo.deleteMany({
+        databaseUrl: connection.databaseUrl,
         collection,
         filter,
     });
