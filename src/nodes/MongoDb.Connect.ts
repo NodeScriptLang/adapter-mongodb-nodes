@@ -10,7 +10,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.1.0',
+    version: '2.1.1',
     moduleName: 'Mongo DB / Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
@@ -43,8 +43,9 @@ export const module: ModuleDefinition<P, R> = {
 
 export const compute: ModuleCompute<P, R> = async (params, ctx) => {
     const adapterUrl = getAdapterUrl(params, ctx);
-    const connection = new MongoDbConnection(params.url, adapterUrl, params.secret);
-    // TODO check connection
+    const databaseUrl = params.url;
+    const connection = new MongoDbConnection(databaseUrl, adapterUrl, params.secret);
+    await connection.Mongo.connect({ databaseUrl });
     return connection;
 };
 
