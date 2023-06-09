@@ -27,7 +27,7 @@
         "lint"
     ],
     "dependencies": {
-        "@nodescript/adapter-mongodb-protocol": "^1.6.0",
+        "@nodescript/adapter-mongodb-protocol": "^1.7.2",
         "@nodescript/core": "^6.1.0"
     },
     "devDependencies": {
