@@ -15,7 +15,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.2.0',
+    version: '2.2.1',
     moduleName: 'Mongo DB / Find Many',
     description: 'Finds documents in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'find', 'query'],

@@ -13,7 +13,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.2.0',
+    version: '2.2.1',
     moduleName: 'Mongo DB / Replace One',
     description: 'Replaces a single document matching criteria in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'replace', 'save'],

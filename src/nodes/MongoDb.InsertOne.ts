@@ -11,7 +11,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.2.0',
+    version: '2.2.1',
     moduleName: 'Mongo DB / Insert One',
     description: 'Inserts a single document into specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'insert'],
