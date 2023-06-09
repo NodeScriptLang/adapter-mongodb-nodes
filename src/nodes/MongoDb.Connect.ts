@@ -5,32 +5,24 @@ import { MongoDbConnection } from '../lib/MongoDbConnection.js';
 type P = {
     url: string;
     adapterUrl: string;
-    secret: string;
 };
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.1.1',
+    version: '2.2.1',
     moduleName: 'Mongo DB / Connect',
     description: 'Connects to a MongoDB database. Returns the connection required by other nodes.',
     keywords: ['mongodb', 'database', 'storage', 'connect'],
     params: {
-        url: {
-            schema: { type: 'string' },
-        },
         adapterUrl: {
             schema: {
                 type: 'string',
                 default: ''
             },
-            advanced: true,
         },
-        secret: {
-            schema: {
-                type: 'string',
-                default: ''
-            },
-            advanced: true,
+        url: {
+            schema: { type: 'string' },
+            label: 'databaseUrl',
         },
     },
     result: {
@@ -44,14 +36,15 @@ export const module: ModuleDefinition<P, R> = {
 export const compute: ModuleCompute<P, R> = async (params, ctx) => {
     const adapterUrl = getAdapterUrl(params, ctx);
     const databaseUrl = params.url;
-    const connection = new MongoDbConnection(databaseUrl, adapterUrl, params.secret);
+    const connection = new MongoDbConnection(databaseUrl, adapterUrl);
     await connection.Mongo.connect({ databaseUrl });
     return connection;
 };
 
 function getAdapterUrl(params: P, ctx: GraphEvalContext) {
-    if (params.adapterUrl) {
-        return params.adapterUrl;
+    const local = ctx.getLocal<string>('ADAPTER_MONGODB_URL');
+    if (local) {
+        return local;
     }
-    return ctx.getLocal<string>('ADAPTER_MONGODB_URL') ?? 'https://mongodb.adapters.nodescript.dev';
+    return params.adapterUrl || 'https://mongodb.adapters.nodescript.dev';
 }

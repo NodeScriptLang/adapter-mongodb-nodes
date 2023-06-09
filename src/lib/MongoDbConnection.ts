@@ -13,14 +13,32 @@ export function requireConnection(value: unknown): MongoDbConnection {
 
 export class MongoDbConnection {
 
-    rpc: MongoProtocol;
+    rpc!: MongoProtocol;
 
-    constructor(readonly databaseUrl: string, readonly adapterUrl: string, secret?: string) {
-        this.rpc = createHttpClient(mongoProtocol, {
-            baseUrl: adapterUrl,
+    constructor(readonly databaseUrl: string, readonly adapterUrl: string) {
+        const parsedUrl = new URL(adapterUrl);
+        const secret = parsedUrl.username;
+        parsedUrl.username = '';
+        parsedUrl.password = '';
+        const rpc = createHttpClient(mongoProtocol, {
+            baseUrl: parsedUrl.href,
             headers: secret ? {
                 authorization: `Bearer ${secret}`,
             } : undefined,
+        });
+        Object.defineProperties(this, {
+            databaseUrl: {
+                enumerable: false,
+                value: databaseUrl,
+            },
+            adapterUrl: {
+                enumerable: false,
+                value: adapterUrl,
+            },
+            rpc: {
+                enumerable: false,
+                value: rpc,
+            },
         });
     }
 
