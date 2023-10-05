@@ -1,4 +1,4 @@
-import { MongoFilter, MongoProjection, MongoSort } from '@nodescript/adapter-mongodb-protocol';
+import { MongoFilter, MongoProjection, MongoReadPreference, MongoReadPreferenceSchema, MongoSort } from '@nodescript/adapter-mongodb-protocol';
 import { ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
 
 import { requireConnection } from '../lib/MongoDbConnection.js';
@@ -11,11 +11,12 @@ type P = {
     sort: MongoSort;
     limit: number;
     skip: number;
+    readPreference: MongoReadPreference;
 };
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.2.1',
+    version: '2.2.2',
     moduleName: 'Mongo DB / Find Many',
     description: 'Finds documents in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'find', 'query'],
@@ -59,7 +60,11 @@ export const module: ModuleDefinition<P, R> = {
                 type: 'number',
                 default: 0,
             },
-        }
+        },
+        readPreference: {
+            schema: MongoReadPreferenceSchema.schema,
+            advanced: true,
+        },
     },
     result: {
         async: true,
@@ -85,6 +90,7 @@ export const compute: ModuleCompute<P, R> = async params => {
         sort,
         limit,
         skip,
+        readPreference: params.readPreference ?? 'primary',
     });
     return documents;
 };

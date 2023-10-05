@@ -1,4 +1,4 @@
-import { MongoFilter, MongoProjection } from '@nodescript/adapter-mongodb-protocol';
+import { MongoFilter, MongoProjection, MongoReadPreference, MongoReadPreferenceSchema } from '@nodescript/adapter-mongodb-protocol';
 import { ModuleCompute, ModuleDefinition } from '@nodescript/core/types';
 
 import { requireConnection } from '../lib/MongoDbConnection.js';
@@ -8,11 +8,12 @@ type P = {
     collection: string;
     filter: MongoFilter;
     projection: MongoProjection;
+    readPreference: MongoReadPreference;
 };
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.2.1',
+    version: '2.2.2',
     moduleName: 'Mongo DB / Find One',
     description: 'Finds one document in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'find', 'query'],
@@ -37,7 +38,11 @@ export const module: ModuleDefinition<P, R> = {
                 properties: {},
                 additionalProperties: { type: 'any' },
             }
-        }
+        },
+        readPreference: {
+            schema: MongoReadPreferenceSchema.schema,
+            advanced: true,
+        },
     },
     result: {
         async: true,
@@ -57,6 +62,7 @@ export const compute: ModuleCompute<P, R> = async params => {
         collection,
         filter,
         projection,
+        readPreference: params.readPreference ?? 'primary',
     });
     return document;
 };
