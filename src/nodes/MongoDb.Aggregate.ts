@@ -12,7 +12,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.2.2',
+    version: '2.2.3',
     moduleName: 'Mongo DB / Aggregate',
     description: 'Runs an aggregation pipeline in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'aggregate'],

@@ -13,7 +13,7 @@ type P = {
 type R = Promise<unknown>;
 
 export const module: ModuleDefinition<P, R> = {
-    version: '2.2.2',
+    version: '2.2.3',
     moduleName: 'Mongo DB / Find One',
     description: 'Finds one document in specified MongoDB collection.',
     keywords: ['mongodb', 'database', 'find', 'query'],
@@ -62,7 +62,7 @@ export const compute: ModuleCompute<P, R> = async params => {
         collection,
         filter,
         projection,
-        readPreference: params.readPreference ?? 'primary',
+        readPreference: params.readPreference || 'primary',
     });
     return document;
 };
