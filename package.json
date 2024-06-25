@@ -1,5 +1,5 @@
 {
-    "name": "@nodescript/contrib-mongodb",
+    "name": "@nodescript/adapter-mongodb-nodes",
     "version": "0.2.6",
     "type": "module",
     "description": "MongoDB Connector Nodes",
@@ -43,9 +43,9 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/NodeScriptLang/contrib-mongodb.git"
+        "url": "git+https://github.com/NodeScriptLang/adapter-mongodb-nodes.git"
     },
     "author": "UBIO",
     "license": "ISC",
-    "homepage": "https://github.com/NodeScriptLang/contrib-mongodb#readme"
+    "homepage": "https://github.com/NodeScriptLang/adapter-mongodb-nodes#readme"
 }
